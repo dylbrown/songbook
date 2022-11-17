@@ -1,0 +1,17 @@
+// app global css in SCSS form
+.song-name {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+div.notice {
+  position: fixed;
+  left: 50vw;
+  top: 50vh;
+  transform: translate(-50%, -50%);
+}
+
+.search {
+  margin: 0px 16px;
+}
