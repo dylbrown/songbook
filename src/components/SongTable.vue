@@ -27,7 +27,7 @@ type Song = {
   composer?: string;
   unaccompanied: boolean;
   accompanied: boolean;
-  refrain: 'long' | 'short' | 'none';
+  refrain: string;
   themes: string[];
   category: string;
   happiness: number;
@@ -54,6 +54,13 @@ function makeList(value: string | null) {
   return value.split(/ *; */);
 }
 
+function get(row: any[], i: number): string {
+  const item = row[i];
+  if (item == null) return '';
+  if (item.f != null) return item.f;
+  return item.v;
+}
+
 export default defineComponent({
   name: 'SongTable',
   props: ['filter_string'],
@@ -72,18 +79,18 @@ export default defineComponent({
     for (const row_obj of songs_sheet.table.rows) {
       const row = row_obj.c;
       let song: Song = {
-        name: row[1].v,
-        alt: makeList(row[2].v),
-        roud: row[3].f,
-        composer: row[4].v,
-        unaccompanied: row[5].v.includes('Unaccompanied'),
-        accompanied: row[5].v.includes('Accompanied'),
-        refrain: row[6].v,
-        themes: makeList(row[7].v),
-        category: row[8].v,
-        happiness: row[9].f,
-        norfolk: row[10].v,
-        lyrics: row[11].v
+        name: get(row, 1),
+        alt: makeList(get(row, 2)),
+        roud: Number(get(row, 3)),
+        composer: get(row, 4),
+        unaccompanied: get(row, 5).includes('Unaccompanied'),
+        accompanied: get(row, 5).includes('Accompanied'),
+        refrain: get(row, 6),
+        themes: makeList(get(row, 7)),
+        category: get(row, 8),
+        happiness: Number(get(row, 9)),
+        norfolk: get(row, 10),
+        lyrics: get(row, 11)
       };
       songs.push(song);
     }
