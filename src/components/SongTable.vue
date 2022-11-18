@@ -20,7 +20,7 @@
           <div v-if="col.name == 'name'" class="composer">{{ props.row.composer }}</div>
         </q-td>
       </q-tr>
-      <q-tr v-show="props.expand" :props="props">
+      <q-tr v-show="props.expand" :props="props" class="expand">
         <q-td colspan="100%">
           <div class="details">
             <div class="song-info" v-if="props.row.alt.length > 0">

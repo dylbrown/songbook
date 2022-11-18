@@ -16,13 +16,13 @@
   overflow: hidden;
 }
 
-.song-table td:first-child,
-.song-table th:first-child {
+.song-table tr:not(.expand) td:first-child,
+.song-table tr:not(.expand) th:first-child {
   padding-right: 0px;
 }
 
-.song-table td:last-child,
-.song-table th:last-child {
+.song-table tr:not(.expand) td:last-child,
+.song-table tr:not(.expand) th:last-child {
   padding-left: 0px;
 }
 
