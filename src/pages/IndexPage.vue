@@ -1,6 +1,6 @@
 <template>
   <div class="q-pa-md">
-    <q-input v-model="filter_string" label="Search Titles" />
+    <q-input v-model="filter_string" label="Search" />
     <q-range v-model="happiness_filter" :min=1 :max=5 :step=1 markers marker-labels>
       <template v-slot:marker-label-group="{ markerList }">
 
