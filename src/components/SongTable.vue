@@ -1,5 +1,5 @@
 <template>
-  <q-table :rows="songs" :columns="COLUMNS" row-key="name" style="height: 100%" :rows-per-page-options="NO_ROWS"
+  <q-table :rows="songs" :columns="COLUMNS" row-key="name" card-class="song-table" :rows-per-page-options="NO_ROWS"
     :filter="filter_string + happiness_filter" :filter-method="filter" hide-bottom>
     <template v-slot:header="props">
       <q-tr :props="props">

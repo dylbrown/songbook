@@ -6,6 +6,26 @@
   letter-spacing: 2px;
 }
 
+.song-table {
+  height: 100%;
+  width: 100vw;
+  max-width: 100vw;
+}
+
+.song-table .scroll {
+  overflow: hidden;
+}
+
+.song-table td:first-child,
+.song-table th:first-child {
+  padding-right: 0px;
+}
+
+.song-table td:last-child,
+.song-table th:last-child {
+  padding-left: 0px;
+}
+
 .song-name {
   font-weight: 500;
 }
