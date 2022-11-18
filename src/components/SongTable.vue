@@ -1,17 +1,74 @@
 <template>
-  <q-table title="Songs" :rows="songs" :columns="COLUMNS" row-key="name" style="height: 100%"
-    :rows-per-page-options="NO_ROWS" :filter="filter_string" :filter-method="filter" hide-bottom>
-    <template v-slot:body-cell-name="props">
-      <q-td :props="props">
-        <a class="song-name" :href="props.row.norfolk" target="_blank">
-          {{ props.row.name }}
-        </a>
-      </q-td>
+  <q-table :rows="songs" :columns="COLUMNS" row-key="name" style="height: 100%" :rows-per-page-options="NO_ROWS"
+    :filter="filter_string + happiness_filter" :filter-method="filter" hide-bottom>
+    <template v-slot:header="props">
+      <q-tr :props="props">
+        <q-th auto-width />
+        <q-th v-for="col in props.cols" :key="col.name" :props="props">
+          {{ col.label }}
+        </q-th>
+      </q-tr>
     </template>
-    <template v-slot:body-cell-category="props">
-      <q-td :props="props" style="text-transform: capitalize">
-        {{ props.row.category }}
-      </q-td>
+    <template v-slot:body="props">
+      <q-tr :props="props">
+        <q-td auto-width>
+          <q-btn size="sm" color="accent" round dense @click="props.expand = !props.expand"
+            :icon="props.expand ? 'expand_more' : 'chevron_right'" />
+        </q-td>
+        <q-td v-for="col in props.cols" :key="col.name" :props="props">
+          {{ col.value }}
+          <div v-if="col.name == 'name'" class="composer">{{ props.row.composer }}</div>
+        </q-td>
+      </q-tr>
+      <q-tr v-show="props.expand" :props="props">
+        <q-td colspan="100%">
+          <div class="details">
+            <div class="song-info" v-if="props.row.alt.length > 0">
+              <div class="label">Other Names</div>
+              <div class="info-items">
+                <div class="info-item" v-for="(alt, index) in props.row.alt" :key="index"> {{ alt }} </div>
+              </div>
+            </div>
+            <div class="song-info">
+              <div class="label">Themes</div>
+              <div class="info-items">
+                <div class="info-item" v-for="(themes, index) in props.row.themes" :key="index"> {{ themes }} </div>
+              </div>
+            </div>
+            <div class="song-lights">
+              <div class="label">Tone</div>
+              <div class="lights-icons">
+                <q-icon name="sentiment_very_dissatisfied" size="sm" v-if="props.row.happiness == 1" />
+                <q-icon name="sentiment_dissatisfied" size="sm" v-if="props.row.happiness == 2" />
+                <q-icon name="sentiment_neutral" size="sm" v-if="props.row.happiness == 3" />
+                <q-icon name="sentiment_ssatisfied" size="sm" v-if="props.row.happiness == 4" />
+                <q-icon name="sentiment_very_satisfied" size="sm" v-if="props.row.happiness == 5" />
+              </div>
+            </div>
+            <div class="song-lights">
+              <div class="label">Refrain</div>
+              <div class="lights-icons">
+                <q-icon name="person" size="sm" v-if="props.row.refrain == 'None'" />
+                <q-icon name="group" size="sm" v-if="props.row.refrain == 'Short'" />
+                <q-icon name="groups" size="sm" v-if="props.row.refrain == 'Long'" />
+              </div>
+            </div>
+            <div class="song-lights">
+              <div class="label">Styles</div>
+              <div class="lights-icons">
+                <q-icon name="piano" size="sm" v-if="props.row.accompanied" />
+                <q-icon name="piano_off" size="sm" v-if="props.row.unaccompanied" />
+              </div>
+            </div>
+            <div class="song-buttons">
+              <q-btn size="sm" color="accent" round dense :href="props.row.norfolk" target="_blank"
+                v-if="props.row.norfolk" icon='info' />
+              <q-btn size="sm" color="accent" round dense :to="'/lyrics/' + encodeURIComponent(props.row.name)"
+                icon='lyrics' v-if="props.row.lyrics" />
+            </div>
+          </div>
+        </q-td>
+      </q-tr>
     </template>
   </q-table>
 </template>
@@ -19,21 +76,8 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { QTableProps } from 'quasar';
-
-type Song = {
-  name: string;
-  alt: string[];
-  roud?: number;
-  composer?: string;
-  unaccompanied: boolean;
-  accompanied: boolean;
-  refrain: string;
-  themes: string[];
-  category: string;
-  happiness: number;
-  norfolk?: string;
-  lyrics?: string;
-};
+import { Song } from './models';
+import { getSongs } from 'src/util/table-utils';
 
 const NO_ROWS = [0];
 
@@ -49,72 +93,39 @@ const COLUMNS: QTableProps['columns'] = [{
   required: false, align: 'right', sortable: true,
 },];
 
-function makeList(value: string | null) {
-  if (value == null) return [];
-  return value.split(/ *; */);
-}
-
-function get(row: any[], i: number): string {
-  const item = row[i];
-  if (item == null) return '';
-  if (item.f != null) return item.f;
-  return item.v;
-}
-
 export default defineComponent({
   name: 'SongTable',
-  props: ['filter_string'],
+  props: ['filter_string', 'happiness_filter'],
   async setup() {
-    let songs_sheet = await fetch(
-      'https://docs.google.com/spreadsheets/d/19_AunvMQBWfs3G91r23vIwdEyqy4g9r2p5I7zGPfWvc/gviz/tq?tqx=out:json&sheet=Responses'
-    ).then((res) => {
-      if (!res.ok) {
-        throw new Error('Failed to fetch spreadsheet!');
-      }
-      return res.text();
-    }).then((text) => {
-      return JSON.parse(text.substring(47, text.length - 2));
-    });
-    let songs: Song[] = [];
-    for (const row_obj of songs_sheet.table.rows) {
-      const row = row_obj.c;
-      let song: Song = {
-        name: get(row, 1),
-        alt: makeList(get(row, 2)),
-        roud: Number(get(row, 3)),
-        composer: get(row, 4),
-        unaccompanied: get(row, 5).includes('Unaccompanied'),
-        accompanied: get(row, 5).includes('Accompanied'),
-        refrain: get(row, 6),
-        themes: makeList(get(row, 7)),
-        category: get(row, 8),
-        happiness: Number(get(row, 9)),
-        norfolk: get(row, 10),
-        lyrics: get(row, 11)
-      };
-      songs.push(song);
-    }
-    return { songs, COLUMNS, NO_ROWS };
+    let songs: Song[] = await getSongs();
+    return {
+      songs: songs,
+      COLUMNS: COLUMNS,
+      NO_ROWS: NO_ROWS,
+    };
   },
   methods: {
     filter(
       rows: readonly Song[],
-      terms: string,
+      _terms: string,
       _cols: unknown,
       _getCellValue: (col: unknown, row: Song) => unknown
     ) {
-      terms = terms.toLowerCase();
+      const filter_string = this.filter_string.toLowerCase();
+      const happiness_filter = this.happiness_filter;
       const p = (row: Song): boolean => {
         // Name check
-        if (row.name.toLowerCase().includes(terms)) return true;
-        // Alt name check
-        if (
+        if (!row.name.toLowerCase().includes(filter_string) && !
           row.alt.some((altName) =>
-            altName.toLowerCase().includes(terms)
+            altName.toLowerCase().includes(filter_string)
+          ) && !
+          row.themes.some((themeName) =>
+            themeName.toLowerCase().includes(filter_string)
           )
-        )
-          return true;
-        return false;
+        ) return false;
+        // Happiness check
+        if (row.happiness < happiness_filter.min || row.happiness > happiness_filter.max) return false;
+        return true;
       };
       return rows.filter(p);
     },

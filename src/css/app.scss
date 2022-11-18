@@ -1,17 +1,98 @@
 // app global css in SCSS form
+
+.toolbar-title {
+  text-transform: uppercase;
+  font-weight: 300;
+  letter-spacing: 2px;
+}
+
 .song-name {
-  color: black;
-  text-decoration: none;
   font-weight: 500;
 }
 
-div.notice {
+.composer {
+  font-size: 0.5em;
+  font-style: italic;
+}
+
+.content {
+  position: relative;
+}
+
+.lyrics {
+  white-space: pre-wrap;
+  width: 100vw;
+  max-height: 100vh;
+  height: calc(100vh - 50px);
+  padding: 12px 16px;
+  overflow-y: auto;
+}
+
+.lyrics .section {
+  padding-top: 0.5em;
+  padding-bottom: 1em;
+}
+
+.back {
+  position: absolute;
+  right: 16px;
+  top: 16px;
+}
+.notice {
   position: fixed;
   left: 50vw;
   top: 50vh;
   transform: translate(-50%, -50%);
 }
 
-.search {
-  margin: 0px 16px;
+.details {
+  display: grid;
+  grid-template-columns: 2fr 1fr 60px 40px 60px 25px;
+  justify-items: start;
+  align-items: start;
+  grid-template-rows: 4em;
+}
+.details,
+.details > * {
+  max-height: 4em;
+}
+
+.details .info-items {
+  overflow-y: scroll;
+  max-height: 3em;
+}
+
+.label {
+  font-size: 0.8em;
+  font-weight: 500;
+}
+
+.song-info .info-item {
+  font-size: 0.6em;
+  font-weight: 300;
+}
+
+.song-lights {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  justify-self: center;
+  align-items: center;
+  text-align: center;
+  height: 100%;
+}
+
+.lights-icons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.details .song-buttons {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  justify-self: end;
+  height: 100%;
 }

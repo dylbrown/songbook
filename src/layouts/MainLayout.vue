@@ -4,7 +4,7 @@
       <q-toolbar>
         <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
 
-        <q-toolbar-title> Dylan's Songbook </q-toolbar-title>
+        <q-toolbar-title class="toolbar-title"> The Folkbook </q-toolbar-title>
       </q-toolbar>
     </q-header>
 
