@@ -24,6 +24,7 @@ export async function getSongs(): Promise<Song[]> {
           name: get(row, 1),
           alt: makeList(get(row, 2)),
           roud: Number(get(row, 3)),
+          singers: makeList(get(row, 13)),
           composer: get(row, 4),
           unaccompanied: get(row, 5).includes('Unaccompanied'),
           accompanied: get(row, 5).includes('Accompanied'),

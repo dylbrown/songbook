@@ -1,6 +1,7 @@
 <template>
   <q-table :rows="songs" :columns="COLUMNS" row-key="name" card-class="song-table" :rows-per-page-options="NO_ROWS"
-    :filter="filter_string + happiness_filter" :filter-method="filter" hide-bottom>
+    :filter="[filter_string, happiness_filter, singers_filter, acc_filter, unacc_filter]" :filter-method="filter"
+    hide-bottom>
     <template v-slot:header="props">
       <q-tr :props="props">
         <q-th auto-width />
@@ -15,7 +16,9 @@
           <q-btn size="sm" color="accent" round dense @click="props.expand = !props.expand"
             :icon="props.expand ? 'expand_more' : 'chevron_right'" />
         </q-td>
-        <q-td v-for="col in props.cols" :key="col.name" :props="props">
+        <q-td v-for="col in props.cols" :key="col.name" :props="props" class="table-cell" :class="{
+          small: col.value.includes('\n') && col.name != 'name'
+        }">
           {{ col.value }}
           <div v-if="col.name == 'name'" class="composer">{{ props.row.composer }}</div>
         </q-td>
@@ -82,22 +85,28 @@ import { getSongs } from 'src/util/table-utils';
 const NO_ROWS = [0];
 
 const COLUMNS: QTableProps['columns'] = [{
-  name: 'name', label: 'Name', field:
-    (row) => row.name, required: true, align: 'left', sortable: true,
+  name: 'name', label: 'Name', field: 'name', required: true, align: 'left', sortable: true,
 }, {
   name:
     'category', label: 'Category', field: 'category', required: true, align:
-    'right', sortable: true,
+    'center', sortable: true,
 }, {
-  name: 'roud', label: 'Roud', field: 'roud',
-  required: false, align: 'right', sortable: true,
+  name: 'Singer', label: 'Singer', field: (row) => row.singers.join('\n'),
+  required: true, align: 'center', sortable: true,
 },];
 
 export default defineComponent({
   name: 'SongTable',
-  props: ['filter_string', 'happiness_filter'],
-  async setup() {
+  props: ['filter_string', 'happiness_filter', 'singers_filter', 'acc_filter', 'unacc_filter'],
+  async setup(_props, { emit }) {
     let songs: Song[] = await getSongs();
+    let singers: Set<string> = new Set();
+    for (const song of songs) {
+      for (const singer of song.singers) {
+        singers.add(singer);
+      }
+    }
+    emit('updateSingers', singers);
     return {
       songs: songs,
       COLUMNS: COLUMNS,
@@ -112,7 +121,6 @@ export default defineComponent({
       _getCellValue: (col: unknown, row: Song) => unknown
     ) {
       const filter_string = this.filter_string.toLowerCase();
-      const happiness_filter = this.happiness_filter;
       const p = (row: Song): boolean => {
         // Name check
         if (!row.name.toLowerCase().includes(filter_string) && !
@@ -124,7 +132,12 @@ export default defineComponent({
           )
         ) return false;
         // Happiness check
-        if (row.happiness < happiness_filter.min || row.happiness > happiness_filter.max) return false;
+        if (row.happiness < this.happiness_filter.min || row.happiness > this.happiness_filter.max) return false;
+        // Singers check
+        if (this.singers_filter && this.singers_filter.length > 0 &&
+            !this.singers_filter.some((singer: string) => row.singers.includes(singer))) return false;
+        // Accompanied check
+        if(!((this.acc_filter && row.accompanied) || (this.unacc_filter && row.unaccompanied))) return false;
         return true;
       };
       return rows.filter(p);

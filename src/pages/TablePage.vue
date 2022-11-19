@@ -1,6 +1,12 @@
 <template>
   <div class="q-pa-md">
     <q-input v-model="filter_string" label="Search" />
+    <div class="filters">
+      <q-select v-model="singers_filter" multiple :options="singers" label="Singers" style="flex-grow: 1"
+        behavior="menu" />
+      <q-toggle v-model="acc_filter" size="xl" icon="piano" />
+      <q-toggle v-model="unacc_filter" size="xl" icon="piano_off" />
+    </div>
     <q-range v-model="happiness_filter" :min=1 :max=5 :step=1 markers marker-labels>
       <template v-slot:marker-label-group="{ markerList }">
 
@@ -13,7 +19,8 @@
     <template #fallback>
       <div class="notice">Loading...</div>
     </template>
-    <SongTable :filter_string="filter_string" :happiness_filter="happiness_filter" />
+    <SongTable :filter_string="filter_string" :happiness_filter="happiness_filter" :singers_filter="singers_filter"
+      :acc_filter="acc_filter" :unacc_filter="unacc_filter" @updateSingers="updateSingers" />
   </Suspense>
 </template>
 
@@ -22,12 +29,18 @@ import { defineComponent, ref } from 'vue';
 import SongTable from 'src/components/SongTable.vue';
 
 export default defineComponent({
-  name: 'IndexPage',
+  name: 'TablePage',
   components: { SongTable },
+  setup: function () {
+    return { singers: ref(new Array<string>()) };
+  },
   data() {
     return {
       filter_string: ref(''),
       happiness_filter: ref({ min: 1, max: 5 }),
+      singers_filter: ref(null),
+      acc_filter: ref(true),
+      unacc_filter: ref(true),
     }
   },
   methods: {
@@ -40,6 +53,10 @@ export default defineComponent({
         default:
         case 2: return 'sentiment_neutral';
       }
+    },
+    updateSingers(singers: Set<string>) {
+      this.singers.length = 0;
+      this.singers.push(...singers);
     }
   }
 });

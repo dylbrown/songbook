@@ -6,6 +6,11 @@
   letter-spacing: 2px;
 }
 
+.filters {
+  display: flex;
+  justify-content: stretch;
+}
+
 .song-table {
   height: 100%;
   width: 100vw;
@@ -26,6 +31,14 @@
   padding-left: 0px;
 }
 
+td.table-cell {
+  white-space: pre-wrap;
+}
+
+td.table-cell.small {
+  font-size: 0.75em;
+}
+
 .song-name {
   font-weight: 500;
 }
@@ -38,8 +51,7 @@
 .content {
   position: relative;
   width: 100vw;
-  max-height: 100vh;
-  height: calc(100vh - 50px);
+  height: 64px;
   overflow: hidden;
 }
 
@@ -74,8 +86,8 @@
 .details {
   display: grid;
   grid-template-columns: 2fr 1fr 60px 40px 60px 25px;
-  justify-items: start;
-  align-items: start;
+  justify-items: flex-start;
+  align-items: flex-start;
   grid-template-rows: 4em;
 }
 .details,
@@ -101,7 +113,7 @@
 .song-lights {
   display: flex;
   flex-direction: column;
-  justify-content: start;
+  justify-content: flex-start;
   justify-self: center;
   align-items: center;
   text-align: center;
