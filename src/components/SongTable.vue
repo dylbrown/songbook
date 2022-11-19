@@ -88,10 +88,10 @@ const COLUMNS: QTableProps['columns'] = [{
   name: 'name', label: 'Name', field: 'name', required: true, align: 'left', sortable: true,
 }, {
   name:
-    'category', label: 'Category', field: 'category', required: true, align:
+    'category', label: 'Category', field: (row: Song) => row.categories.join('\n'), required: true, align:
     'center', sortable: true,
 }, {
-  name: 'Singer', label: 'Singer', field: (row) => row.singers.join('\n'),
+  name: 'Singer', label: 'Singer', field: (row: Song) => row.singers.join('\n'),
   required: true, align: 'center', sortable: true,
 },];
 
@@ -135,9 +135,9 @@ export default defineComponent({
         if (row.happiness < this.happiness_filter.min || row.happiness > this.happiness_filter.max) return false;
         // Singers check
         if (this.singers_filter && this.singers_filter.length > 0 &&
-            !this.singers_filter.some((singer: string) => row.singers.includes(singer))) return false;
+          !this.singers_filter.some((singer: string) => row.singers.includes(singer))) return false;
         // Accompanied check
-        if(!((this.acc_filter && row.accompanied) || (this.unacc_filter && row.unaccompanied))) return false;
+        if (!((this.acc_filter && row.accompanied) || (this.unacc_filter && row.unaccompanied))) return false;
         return true;
       };
       return rows.filter(p);

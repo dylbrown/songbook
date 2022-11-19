@@ -17,7 +17,7 @@ export type Song = {
   accompanied: boolean;
   refrain: string;
   themes: string[];
-  category: string;
+  categories: string[];
   happiness: number;
   norfolk?: string;
   lyrics?: string;
