@@ -30,7 +30,7 @@ export async function getSongs(): Promise<Song[]> {
           accompanied: get(row, 5).includes('Accompanied'),
           refrain: get(row, 6),
           themes: makeList(get(row, 7)),
-          categories: makeList(get(row, 8)),
+          categories: makeList(get(row, 8), '[,;]'),
           happiness: Number(get(row, 9)),
           norfolk: get(row, 10),
           lyrics: get(row, 11),
@@ -42,9 +42,9 @@ export async function getSongs(): Promise<Song[]> {
   return songs_promise;
 }
 
-function makeList(value: string | null) {
+function makeList(value: string | null, separator = ';') {
   if (value == null) return [];
-  return value.split(/ *; */);
+  return value.split(new RegExp(' *' + separator + ' *'));
 }
 
 function get(row: any[], i: number): string {

@@ -2,7 +2,7 @@
   "name": "songbook",
   "version": "0.0.1",
   "description": "A Songs index",
-  "productName": "Songbook",
+  "productName": "The Folkbook",
   "author": "Dylan Brown <dylanmb193@gmail.com>",
   "private": true,
   "scripts": {
