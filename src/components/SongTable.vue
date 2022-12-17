@@ -84,8 +84,16 @@ import { getSongs } from 'src/util/table-utils';
 
 const NO_ROWS = [0];
 
+function removeThe(s: string): string {
+  if (s.startsWith('The')) return s.substring(4);
+  return s;
+}
+
 const COLUMNS: QTableProps['columns'] = [{
   name: 'name', label: 'Name', field: 'name', required: true, align: 'left', sortable: true,
+  sort: (a, b, _rowA, _rowB) => {
+    return removeThe(a).localeCompare(removeThe(b));
+  }
 }, {
   name:
     'category', label: 'Category', field: (row: Song) => row.categories.join('\n'), required: true, align:
