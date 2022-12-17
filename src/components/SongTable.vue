@@ -1,7 +1,7 @@
 <template>
   <q-table :rows="songs" :columns="COLUMNS" row-key="name" card-class="song-table" :rows-per-page-options="NO_ROWS"
     :filter="[filter_string, happiness_filter, singers_filter, acc_filter, unacc_filter]" :filter-method="filter"
-    hide-bottom>
+    hide-bottom :pagination="{ sortBy: 'name' }">
     <template v-slot:header="props">
       <q-tr :props="props">
         <q-th auto-width />
