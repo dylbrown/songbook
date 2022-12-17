@@ -19,8 +19,7 @@
 }
 
 .full-scroll {
-  height: calc(100vh - 50px);
-  height: -webkit-fill-available;
+  height: calc(100vh - 50px - env(safe-area-inset-bottom));
 }
 
 .song-table tr:not(.expand) td:first-child,
