@@ -51,8 +51,7 @@ td.table-cell.small {
 .content {
   position: relative;
   width: 100vw;
-  height: 64px;
-  overflow: hidden;
+  max-height: 0px;
 }
 
 .lyrics {
