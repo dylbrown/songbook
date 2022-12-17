@@ -1,10 +1,10 @@
 <template>
-  <div class="lyrics" v-if="lyrics">
+  <q-scroll-area class="lyrics full-scroll" v-if="lyrics">
     <h5 class="text-h5">{{ song_name }}</h5>
     <div class="section" v-for="(section, index) in lyrics" :key="index" @click="scrollTo($event)">
       {{ section }}
     </div>
-  </div>
+  </q-scroll-area>
   <div class="notice" v-else>No Lyrics Available</div>
 </template>
 

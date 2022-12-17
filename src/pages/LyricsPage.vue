@@ -1,13 +1,15 @@
 <template>
-  <div class="content">
-    <q-btn class="back" size="lg" color="accent" round dense to="/" icon='arrow_back' />
+  <q-page>
     <Suspense>
       <template #fallback>
         <div class="notice">Loading...</div>
       </template>
       <SongLyrics :song_name="$route.params.song_name" />
     </Suspense>
-  </div>
+    <q-page-sticky position="top-right" :offset="[18, 18]">
+      <q-btn fab to="/" icon='arrow_back' color="accent" />
+    </q-page-sticky>
+  </q-page>
 </template>
 
 <script lang="ts">

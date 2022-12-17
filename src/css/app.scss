@@ -1,5 +1,12 @@
 // app global css in SCSS form
 
+.text-accent-clear {
+  color: $accent-clear !important;
+}
+.bg-accent-clear {
+  background: $accent-clear !important;
+}
+
 .toolbar-title {
   text-transform: uppercase;
   font-weight: 300;
@@ -11,14 +18,8 @@
   justify-content: stretch;
 }
 
-.song-table {
-  height: 100%;
-  width: 100%;
-  max-width: 100%;
-}
-
-.song-table .scroll {
-  overflow: hidden;
+.full-scroll {
+  height: calc(100vh - 50px);
 }
 
 .song-table tr:not(.expand) td:first-child,
@@ -48,20 +49,10 @@ td.table-cell.small {
   font-style: italic;
 }
 
-.content {
-  position: relative;
-  width: 100vw;
-  max-height: 0px;
-}
-
 .lyrics {
   white-space: pre-wrap;
   width: 100vw;
-  max-height: 100vh;
-  height: calc(100vh - 50px);
   padding: 12px 16px;
-  overflow-y: auto;
-  position: fixed;
 }
 
 .lyrics .section {
@@ -69,12 +60,6 @@ td.table-cell.small {
   padding-bottom: 1em;
 }
 
-.back {
-  position: absolute;
-  right: 16px;
-  top: 16px;
-  z-index: 1;
-}
 .notice {
   position: fixed;
   left: 50vw;
