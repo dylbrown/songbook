@@ -20,6 +20,7 @@
 
 .full-scroll {
   height: calc(100vh - 50px);
+  height: -webkit-fill-available;
 }
 
 .song-table tr:not(.expand) td:first-child,
