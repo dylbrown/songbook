@@ -140,7 +140,7 @@ export default defineComponent({
           )
         ) return false;
         // Happiness check
-        if (row.happiness < this.happiness_filter.min || row.happiness > this.happiness_filter.max) return false;
+        if (row.happiness != 0 && (row.happiness < this.happiness_filter.min || row.happiness > this.happiness_filter.max)) return false;
         // Singers check
         if (this.singers_filter && this.singers_filter.length > 0 &&
           !this.singers_filter.some((singer: string) => row.singers.includes(singer))) return false;

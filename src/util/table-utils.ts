@@ -34,8 +34,9 @@ export async function getSongs(): Promise<Song[]> {
           roud: Number(get(row, 3)),
           singers: makeList(get(row, 13)),
           composer: get(row, 4),
-          unaccompanied: get(row, 5).includes('Unaccompanied'),
-          accompanied: get(row, 5).includes('Accompanied'),
+          unaccompanied:
+            row[5] == null || get(row, 5).includes('Unaccompanied'),
+          accompanied: row[5] == null || get(row, 5).includes('Accompanied'),
           refrain: get(row, 6),
           themes: makeList(get(row, 7)),
           categories: makeList(get(row, 8), '[,;]'),
