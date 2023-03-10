@@ -43,6 +43,7 @@ export async function getSongs(): Promise<Song[]> {
           happiness: Number(get(row, 9)),
           norfolk: get(row, 10),
           lyrics: get(row, 11),
+          info: get(row, 15),
         };
         songs.push(song);
       }

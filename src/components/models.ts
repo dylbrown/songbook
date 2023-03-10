@@ -21,4 +21,5 @@ export type Song = {
   happiness: number;
   norfolk?: string;
   lyrics?: string;
+  info?: string;
 };
