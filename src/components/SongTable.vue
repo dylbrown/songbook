@@ -99,8 +99,16 @@ const COLUMNS: QTableProps['columns'] = [{
     'category', label: 'Category', field: (row: Song) => row.categories.join('\n'), required: true, align:
     'center', sortable: true,
 }, {
-  name: 'Singer', label: 'Singer', field: (row: Song) => row.singers.join('\n'),
-  required: true, align: 'center', sortable: true,
+  name: 'date', label: 'Date Added', field: (row: Song) => {
+    const pieces = row.date.trim().split('/');
+    console.log(pieces);
+    let date = new Date(parseInt(pieces[2]), parseInt(pieces[1]) - 1, parseInt(pieces[0]));
+    const options: Intl.DateTimeFormatOptions = { year: '2-digit', month: 'short', day: '2-digit' };
+    return date.toLocaleDateString('en-GB', options);
+  },
+  required: true, align: 'center', sortable: true, sort: (a, b, _rowA, _rowB) => {
+    return Date.parse(a) < Date.parse(b) ? -1 : (Date.parse(a) > Date.parse(b) ? 1 : 0);
+  }
 },];
 
 export default defineComponent({

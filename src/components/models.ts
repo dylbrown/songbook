@@ -12,6 +12,7 @@ export type Song = {
   alt: string[];
   roud?: number;
   singers: string[];
+  date: string;
   composer?: string;
   unaccompanied: boolean;
   accompanied: boolean;
