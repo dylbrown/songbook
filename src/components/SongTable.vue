@@ -1,7 +1,7 @@
 <template>
   <q-table :rows="songs" :columns="COLUMNS" row-key="name" card-class="song-table" :rows-per-page-options="NO_ROWS"
     :filter="[filter_string, happiness_filter, singers_filter, acc_filter, unacc_filter]" :filter-method="filter"
-    hide-bottom :pagination="{ sortBy: 'name' }">
+    hide-bottom :pagination="{ sortBy: 'date', descending: true }">
     <template v-slot:header="props">
       <q-tr :props="props">
         <q-th auto-width />
@@ -17,8 +17,8 @@
             :icon="props.expand ? 'expand_more' : 'chevron_right'" />
         </q-td>
         <q-td v-for="col in props.cols" :key="col.name" :props="props" class="table-cell" :class="{
-          small: col.value.includes('\n') && col.name != 'name'
-        }">
+            small: col.value.includes('\n') && col.name != 'name'
+          }">
           {{ col.value }}
           <div v-if="col.name == 'name'" class="composer">{{ props.row.composer }}</div>
         </q-td>
