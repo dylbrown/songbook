@@ -18,7 +18,7 @@
 
     <q-page-container>
       <router-view v-slot="{ Component }">
-        <keep-alive>
+        <keep-alive include="SongTable,TablePage">
           <component :is="Component" />
         </keep-alive>
       </router-view>
