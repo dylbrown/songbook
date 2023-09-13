@@ -20,7 +20,7 @@ export type Song = {
   themes: string[];
   categories: string[];
   happiness: number;
-  norfolk?: string;
+  reference?: string;
   lyrics?: string;
   info?: string;
 };

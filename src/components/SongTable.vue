@@ -65,7 +65,7 @@
             </div>
             <div class="song-buttons">
               <q-btn size="sm" color="accent" round dense :to="'/info/' + encodeURIComponent(props.row.name)"
-                v-if="props.row.info || props.row.norfolk" icon='info' />
+                v-if="props.row.info || props.row.reference" icon='info' />
               <q-btn size="sm" color="accent" round dense :to="'/lyrics/' + encodeURIComponent(props.row.name)"
                 icon='lyrics' v-if="props.row.lyrics" />
             </div>

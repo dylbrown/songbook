@@ -42,7 +42,7 @@ export async function getSongs(): Promise<Song[]> {
           themes: makeList(get(row, 7), '[,;]'),
           categories: makeList(get(row, 8), '[,;]'),
           happiness: Number(get(row, 9)),
-          norfolk: get(row, 10),
+          reference: get(row, 10),
           lyrics: get(row, 11),
           info: get(row, 15),
         };
