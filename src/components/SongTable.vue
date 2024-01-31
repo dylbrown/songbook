@@ -17,8 +17,8 @@
             :icon="props.expand ? 'expand_more' : 'chevron_right'" />
         </q-td>
         <q-td v-for="col in props.cols" :key="col.name" :props="props" class="table-cell" :class="{
-            small: col.value.includes('\n') && col.name != 'name'
-          }">
+          small: col.value.includes('\n') && col.name != 'name'
+        }">
           {{ col.value }}
           <div v-if="col.name == 'name'" class="composer">{{ props.row.composer }}</div>
         </q-td>
@@ -35,7 +35,7 @@
             <div class="song-info">
               <div class="label">Themes</div>
               <div class="info-items">
-                <div class="info-item" v-for="(themes, index) in props.row.themes" :key="index"> {{ themes }} </div>
+                {{ props.row.themes.join(", ") }}
               </div>
             </div>
             <div class="song-lights">

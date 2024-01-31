@@ -82,7 +82,10 @@ td.table-cell.small {
 
 .details .info-items {
   overflow-y: scroll;
+  text-wrap: wrap;
   max-height: 3em;
+  font-size: 0.6em;
+  font-weight: 300;
 }
 
 .label {
@@ -91,8 +94,6 @@ td.table-cell.small {
 }
 
 .song-info .info-item {
-  font-size: 0.6em;
-  font-weight: 300;
 }
 
 .song-info {
