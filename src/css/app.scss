@@ -73,27 +73,18 @@ td.table-cell.small {
   grid-template-columns: 2fr 1fr 60px 40px 60px 25px;
   justify-items: flex-start;
   align-items: flex-start;
-  grid-template-rows: 4em;
-}
-.details,
-.details > * {
-  max-height: 4em;
 }
 
 .details .info-items {
-  overflow-y: scroll;
-  text-wrap: wrap;
-  max-height: 3em;
+  white-space: break-spaces;
   font-size: 0.6em;
   font-weight: 300;
+  padding-right: 5px;
 }
 
 .label {
   font-size: 0.8em;
   font-weight: 500;
-}
-
-.song-info .info-item {
 }
 
 .song-info {
@@ -107,7 +98,7 @@ td.table-cell.small {
   justify-self: center;
   align-items: center;
   text-align: center;
-  height: 100%;
+  height: 4em;
 }
 
 .lights-icons {
@@ -122,5 +113,5 @@ td.table-cell.small {
   flex-direction: column;
   justify-content: space-between;
   justify-self: end;
-  height: 100%;
+  height: 4em;
 }
