@@ -1,3 +1,4 @@
+import { marked } from 'marked';
 import { Song } from 'src/components/models';
 
 let songs_promise: Promise<Song[]> | null = null;
@@ -24,7 +25,7 @@ export async function getSongs(): Promise<Song[]> {
     .then((text) => {
       return JSON.parse(text.substring(47, text.length - 2));
     })
-    .then((songs_sheet) => {
+    .then(async (songs_sheet) => {
       const songs: Song[] = [];
       for (const row_obj of songs_sheet.table.rows) {
         const row = row_obj.c;
@@ -46,6 +47,7 @@ export async function getSongs(): Promise<Song[]> {
           lyrics: get(row, 11),
           info: get(row, 15),
         };
+        if (song.info) song.info = await marked.parse(song.info.trim());
         songs.push(song);
       }
       // shuffleArray(songs);
