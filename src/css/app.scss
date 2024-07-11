@@ -15,7 +15,8 @@
 
 .filters {
   display: flex;
-  justify-content: stretch;
+  justify-content: space-between;
+  gap: 20px;
 }
 
 .song-table tr:not(.expand) td:first-child,

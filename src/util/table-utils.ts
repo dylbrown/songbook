@@ -58,7 +58,9 @@ export async function getSongs(): Promise<Song[]> {
 
 function makeList(value: string | null, separator = ';') {
   if (value == null) return [];
-  return value.split(new RegExp(' *' + separator + ' *'));
+  return value
+    .split(new RegExp(' *' + separator + ' *'))
+    .filter((s) => s.trim().length > 0);
 }
 
 function get(row: any[], i: number): string {

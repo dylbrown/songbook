@@ -37,6 +37,12 @@ const linksList = [
     icon: 'post_add',
     link: 'https://forms.gle/o5DLQKaxBXxCxgYj7',
   },
+  {
+    title: 'Mainly Norfolk',
+    caption: 'For details on numerous English folk records',
+    icon: 'search',
+    link: 'https://mainlynorfolk.info/',
+  },
 ];
 
 export default defineComponent({
