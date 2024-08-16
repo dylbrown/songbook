@@ -17,6 +17,11 @@
   display: flex;
   justify-content: space-between;
   gap: 20px;
+  overflow: hidden;
+}
+
+.q-toggle {
+  margin-left: -10px;
 }
 
 .song-table tr:not(.expand) td:first-child,
