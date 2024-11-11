@@ -20,7 +20,8 @@
     "rollup": "2.79.2",
     "vite": "2.9.18",
     "vue": "^3.5.10",
-    "vue-router": "^4.4.5"
+    "vue-router": "^4.4.5",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   },
   "devDependencies": {
     "@quasar/app-vite": "^1.10.0",

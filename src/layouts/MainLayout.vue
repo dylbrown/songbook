@@ -4,7 +4,7 @@
       <q-toolbar>
         <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
 
-        <q-toolbar-title class="toolbar-title"> The Folkbook </q-toolbar-title>
+        <q-toolbar-title class="toolbar-title"> Christina's Songs </q-toolbar-title>
       </q-toolbar>
     </q-header>
 
@@ -35,37 +35,7 @@ const linksList = [
     title: 'Song Entry Form',
     caption: 'For adding new entries to this site',
     icon: 'post_add',
-    link: 'https://forms.gle/o5DLQKaxBXxCxgYj7',
-  },
-  {
-    title: 'Vaughan Williams Memorial Library',
-    caption: 'For the Roud Index and access to various manuscripts',
-    icon: 'library_books',
-    link: 'https://archives.vwml.org/',
-  },
-  {
-    title: 'Mainly Norfolk',
-    caption: 'For details on numerous English folk records',
-    icon: 'album',
-    link: 'https://mainlynorfolk.info/',
-  },
-  {
-    title: 'The Mudcat Cafe',
-    caption: 'A forum of various folk personalities crowdsourcing information',
-    icon: 'forum',
-    link: 'https://mudcat.org/',
-  },
-  {
-    title: 'Tobar an Dualchais',
-    caption: 'Audio recordings of Scottish cultural heritage',
-    icon: 'headphones',
-    link: 'https://www.tobarandualchais.co.uk/',
-  },
-  {
-    title: 'Clare Country Library',
-    caption: 'Audio recordings collected in Clare by Jim Carroll and Pat Mackenzie',
-    icon: 'headphones',
-    link: 'https://www.clarelibrary.ie/eolas/coclare/songs/cmc/index.htm',
+    link: 'https://google.ca',
   },
 ];
 

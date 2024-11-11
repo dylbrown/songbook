@@ -1,5 +1,5 @@
-import { marked } from 'marked';
 import { Song } from 'src/components/models';
+import * as XLSX from 'xlsx';
 
 let songs_promise: Promise<Song[]> | null = null;
 
@@ -14,40 +14,37 @@ let songs_promise: Promise<Song[]> | null = null;
 export async function getSongs(): Promise<Song[]> {
   if (songs_promise != null) return songs_promise;
   songs_promise = fetch(
-    'https://docs.google.com/spreadsheets/d/19_AunvMQBWfs3G91r23vIwdEyqy4g9r2p5I7zGPfWvc/gviz/tq?tqx=out:json&sheet=Responses'
+    'https://dl.dropboxusercontent.com/scl/fi/ip7jgbc9ixbkn7g2nqvjy/Christina-s-Songs.xlsx?rlkey=1z21c01yp0jo6upel4c846afb&e=1&dl=1',
   )
     .then((res) => {
-      if (!res.ok) {
-        throw new Error('Failed to fetch spreadsheet!');
-      }
-      return res.text();
+      return res.arrayBuffer();
     })
-    .then((text) => {
-      return JSON.parse(text.substring(47, text.length - 2));
+    .then((res) => {
+      return XLSX.read(new Uint8Array(res), {
+        type: 'array',
+        sheets: "Christina's Songs",
+        dense: true,
+        cellHTML: false,
+        cellText: false,
+      });
     })
     .then(async (songs_sheet) => {
       const songs: Song[] = [];
-      for (const row_obj of songs_sheet.table.rows) {
-        const row = row_obj.c;
+      let rowID = 0;
+      for (const row of songs_sheet.Sheets["Christina's Songs"]['!data'] ??
+        []) {
+        if (rowID++ < 2 || !row) {
+          continue;
+        }
         const song: Song = {
           name: get(row, 1),
-          alt: makeList(get(row, 2)),
-          roud: Number(get(row, 3)),
-          singers: makeList(get(row, 13)),
-          date: get(row, 0),
-          composer: get(row, 4),
-          unaccompanied:
-            row[5] == null || get(row, 5).includes('Unaccompanied'),
-          accompanied: row[5] == null || get(row, 5).includes('Accompanied'),
-          refrain: get(row, 6),
-          themes: makeList(get(row, 7), '[,;]'),
-          categories: makeList(get(row, 8), '[,;]'),
-          happiness: Number(get(row, 9)),
-          reference: get(row, 10),
-          lyrics: get(row, 11),
-          info: get(row, 15),
+          firstLines: makeList(get(row, 2), '[/]'),
+          key: get(row, 3),
+          chords: get(row, 4),
+          maker: makeList(get(row, 5), '( *[/] *| {4,})', true),
+          from: makeList(get(row, 7), '[, ]'),
+          tags: makeList(get(row, 8), '[,]'),
         };
-        if (song.info) song.info = await marked.parse(song.info.trim());
         songs.push(song);
       }
       // shuffleArray(songs);
@@ -56,16 +53,15 @@ export async function getSongs(): Promise<Song[]> {
   return songs_promise;
 }
 
-function makeList(value: string | null, separator = ';') {
+function makeList(value: string | null, separator = ';', usesOr = false) {
   if (value == null) return [];
   return value
-    .split(new RegExp(' *' + separator + ' *'))
-    .filter((s) => s.trim().length > 0);
+    .split(new RegExp(usesOr ? separator : ' *' + separator + ' *'))
+    .filter((s, i) => s.trim().length > 0 && i % 2 == 0);
 }
 
 function get(row: any[], i: number): string {
   const item = row[i];
-  if (item == null) return '';
-  if (item.f != null) return item.f;
+  if (item == null || item.v == null) return '';
   return item.v;
 }
