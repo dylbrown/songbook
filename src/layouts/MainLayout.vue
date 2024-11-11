@@ -32,8 +32,8 @@ import EssentialLink from 'components/EssentialLink.vue';
 
 const linksList = [
   {
-    title: 'Song Entry Form',
-    caption: 'For adding new entries to this site',
+    title: 'Example Link',
+    caption: 'For reference',
     icon: 'post_add',
     link: 'https://google.ca',
   },
