@@ -40,11 +40,14 @@ export async function getSongs(): Promise<Song[]> {
           name: get(row, 1),
           firstLines: makeList(get(row, 2), '[/]'),
           key: get(row, 3),
-          chords: get(row, 4),
+          chords: get(row, 4)
+            .replaceAll(/V(erse)?:? ?/gi, '')
+            .replaceAll(/ *Ch(orus)?:? ?/gi, '<br><b>Chorus</b> '),
           maker: makeList(get(row, 5), '( *[/] *| {4,})', true),
           from: makeList(get(row, 7), '[, ]'),
           tags: makeList(get(row, 8), '[,]'),
         };
+        if (song.name.trim().length == 0) continue;
         songs.push(song);
       }
       // shuffleArray(songs);
@@ -54,10 +57,9 @@ export async function getSongs(): Promise<Song[]> {
 }
 
 function makeList(value: string | null, separator = ';', usesOr = false) {
-  if (value == null) return [];
-  return value
-    .split(new RegExp(usesOr ? separator : ' *' + separator + ' *'))
-    .filter((s, i) => s.trim().length > 0 && i % 2 == 0);
+  if (value == null || value.trim().length == 0) return [];
+  const regex = new RegExp(usesOr ? separator : ' *' + separator + ' *');
+  return value.split(regex).filter((s) => !s.match(regex));
 }
 
 function get(row: any[], i: number): string {

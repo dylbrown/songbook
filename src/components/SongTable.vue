@@ -32,9 +32,9 @@
                 {{ props.row.maker.join('\n') }}
               </div>
             </div>
-            <div class="lbar" v-if="props.row.chords.length > 0">
-              <q-icon name="piano" size="sm" />&nbsp;
-              {{ props.row.chords }}
+            <q-icon class="chord-symbol" v-if="props.row.chords.length > 0" name="piano" size="sm" />
+            <div class="chords" v-if="props.row.chords.length > 0">
+              <p v-html="props.row.chords"></p>
             </div>
           </div>
         </q-td>
@@ -94,7 +94,7 @@ export default defineComponent({
       _cols: unknown,
       _getCellValue: (col: unknown, row: Song) => unknown
     ) {
-      const filter_string = this.filter_string.toLowerCase().trim();
+      const filter_string = this.filter_string ? this.filter_string.toLowerCase().trim() : '';
       const p = (row: Song): boolean => {
         for (const filter_item of filter_string.split(/[, ]+/)) {
           if (!row.name.toLowerCase().includes(filter_item) && !
@@ -109,6 +109,7 @@ export default defineComponent({
         }
         return true;
       };
+      if (filter_string.length == 0) return rows;
       return rows.filter(p);
     },
   },

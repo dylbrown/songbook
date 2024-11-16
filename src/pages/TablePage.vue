@@ -1,7 +1,7 @@
 <template>
   <q-page>
     <div class="q-pa-md">
-      <q-input v-model="filter_string" label="Search" />
+      <q-input v-model="filter_string" label="Search" clearable />
     </div>
     <Suspense>
       <template #fallback>
