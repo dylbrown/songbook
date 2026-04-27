@@ -1,5 +1,11 @@
 // app global css in SCSS form
 
+body {
+  font-family: 'Comfortaa', sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
 .text-accent-clear {
   color: $accent-clear !important;
 }
@@ -107,14 +113,15 @@ td.details-td {
   font-weight: 500;
 }
 
-.song-info {
+.song-info,
+.fixed-info {
   padding-top: 4px;
   padding-bottom: 4px;
 }
-.song-info:not(.roud) {
+.song-info {
   flex-grow: 1;
 }
-.roud {
+.fixed-info {
   text-align: center;
 }
 

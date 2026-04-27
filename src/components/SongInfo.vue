@@ -1,11 +1,7 @@
 <template>
-  <div v-if="song && (song.info || song.reference)" class="info-page">
+  <div v-if="song && song.info" class="info-page">
     <h5 class="text-h5">{{ song_name }}</h5>
     <span v-if="song.info" v-html="song.info"></span>
-    <p v-if="song.reference">
-      For additional info, see
-      <a :href="song.reference" target="_blank">here</a>.
-    </p>
   </div>
   <div class="notice" v-else>No Info Available</div>
 </template>

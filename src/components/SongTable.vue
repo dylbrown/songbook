@@ -6,15 +6,7 @@
     :grid="gridMode"
     card-class="song-table"
     :rows-per-page-options="NO_ROWS"
-    :filter="[
-      filter_string,
-      happiness_filter,
-      refrain_filter,
-      singers_filter,
-      tags_filter,
-      acc_filter,
-      unacc_filter,
-    ]"
+    :filter="[filter_string, difficulty_filter, tags_filter]"
     :filter-method="filter"
     hide-bottom
     :pagination="{ sortBy: 'date', descending: true }"
@@ -53,7 +45,7 @@
         >
           {{ col.value }}
           <div v-if="col.name == 'name'" class="composer">
-            {{ props.row.composer }}
+            {{ props.row.source }}
           </div>
         </q-td>
       </q-tr>
@@ -83,7 +75,7 @@
               <q-card-section>
                 <div class="text-h6">{{ props.row.name }}</div>
                 <div class="text-subtitle2">
-                  {{ props.row.categories.join(', ') }}
+                  {{ props.row.themes.join(', ') }}
                 </div>
                 <div>
                   {{ props.row.date.toLocaleDateString('en-GB', DATE_FORMAT) }}
@@ -140,9 +132,9 @@ const COLUMNS: QTableProps['columns'] = [
     },
   },
   {
-    name: 'category',
-    label: 'Category',
-    field: (row: Song) => row.categories.join('\n'),
+    name: 'themes',
+    label: 'Themes',
+    field: (row: Song) => row.themes.join('\n'),
     required: true,
     align: 'center',
     sortable: true,
@@ -163,29 +155,20 @@ const COLUMNS: QTableProps['columns'] = [
 
 const props = defineProps<{
   filter_string: string | null;
-  happiness_filter: { min: number; max: number };
-  refrain_filter: { min: number; max: number };
-  singers_filter: Array<string>;
+  difficulty_filter: { min: number; max: number };
   tags_filter: {
-    categories: TagFilterModel;
     themes: TagFilterModel;
     purposes: TagFilterModel;
   } | null;
-  acc_filter: boolean;
-  unacc_filter: boolean;
   gridMode: boolean;
 }>();
 
-const { songs, singers, categories, themes, purposes } = await getSongs();
+const { songs, themes, purposes } = await getSongs();
 
 const emits = defineEmits<{
-  updateSingers: [singers: Map<string, number>];
-  updateCategories: [categories: Map<string, number>];
   updateThemes: [categories: Map<string, number>];
   updatePurposes: [categories: Map<string, number>];
 }>();
-emits('updateSingers', singers);
-emits('updateCategories', categories);
 emits('updateThemes', themes);
 emits('updatePurposes', purposes);
 
@@ -200,25 +183,16 @@ function filter(
     : '';
   const filter_strings = filter_string.split(/,? +/gi);
   const p = (row: Song): boolean => {
-    // Happiness check
+    // Difficulty check
     if (
-      row.happiness != 0 &&
-      (row.happiness < props.happiness_filter.min ||
-        row.happiness > props.happiness_filter.max)
+      row.difficulty != 0 &&
+      (row.difficulty < props.difficulty_filter.min ||
+        row.difficulty > props.difficulty_filter.max)
     )
       return false;
-    // Singers check
-    if (
-      props.singers_filter &&
-      props.singers_filter.length > 0 &&
-      !props.singers_filter.some((singer: string) =>
-        row.singers.includes(singer),
-      )
-    )
-      return false;
-    // Categories / Themes / Purposes check
+    // Themes / Purposes check
     for (const [key, value] of Object.entries(props.tags_filter ?? {})) {
-      const index = key as 'categories' | 'themes' | 'purposes';
+      const index = key as 'themes' | 'purposes';
       const match = (cat: string) => row[index].includes(cat);
       if (
         value.selections.length > 0 &&
@@ -228,37 +202,10 @@ function filter(
       )
         return false;
     }
-    // Accompanied check
-    if (
-      !(
-        (props.acc_filter && row.accompanied) ||
-        (props.unacc_filter && row.unaccompanied)
-      )
-    )
-      return false;
-    // Refrain check
-    if (
-      row.refrain &&
-      (props.refrain_filter.min > 1 || props.refrain_filter.max < 3)
-    ) {
-      switch (row.refrain.toLowerCase()) {
-        case 'none':
-          if (props.refrain_filter.min > 1) return false;
-          break;
-        case 'short':
-          if (props.refrain_filter.min > 2 || props.refrain_filter.max < 2)
-            return false;
-          break;
-        case 'long':
-          if (props.refrain_filter.max < 3) return false;
-          break;
-      }
-    }
     // Name check
     for (const keyword of filter_strings) {
       if (
         !row.name.toLowerCase().includes(keyword) &&
-        !row.alt.some((altName) => altName.toLowerCase().includes(keyword)) &&
         !row.themes.some((themeName) =>
           themeName.toLowerCase().includes(keyword),
         )

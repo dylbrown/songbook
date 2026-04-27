@@ -6,7 +6,6 @@
   />
 </template>
 <script setup lang="ts">
-import type { Song } from 'src/components/models';
 import { createTypedChart } from 'vue-chartjs';
 import { getSongs } from 'src/util/load-table';
 import { install } from 'resize-observer';
@@ -52,40 +51,31 @@ ChartJS.register(
   Legend,
 );
 
-const { songs, singers } = await getSongs();
-const songsBySinger = new Map<string, Song[]>();
-for (const singer of singers) songsBySinger.set(singer[0], []);
-for (const song of songs) {
-  for (const singer of song.singers) {
-    songsBySinger.get(singer)?.push(song);
-  }
-}
+const { songs } = await getSongs();
 const singersOverTimeData = [];
 let singerCount = 0;
-for (const [singer, songs] of songsBySinger.entries()) {
-  let counter = 0;
-  const data = songs
-    .map((s) => s.date)
-    .sort((a, b) => a.getTime() - b.getTime())
-    .map((d) => {
-      counter += 1;
-      return { x: d, y: counter };
-    });
-  data.push({ x: new Date(Date.now()), y: counter });
-  singersOverTimeData.push({
-    label: singer,
-    data: data,
-    fill: false,
-    borderColor:
-      singerCount < colors.length
-        ? colors[singerCount]
-        : '#' + Math.random().toString(16).slice(-6),
-    tension: 0.1,
+let counter = 0;
+const data = songs
+  .map((s) => s.date)
+  .sort((a, b) => a.getTime() - b.getTime())
+  .map((d) => {
+    counter += 1;
+    return { x: d, y: counter };
   });
-  singerCount += 1;
-}
+data.push({ x: new Date(Date.now()), y: counter });
+singersOverTimeData.push({
+  label: 'Songs',
+  data: data,
+  fill: false,
+  borderColor:
+    singerCount < colors.length
+      ? colors[singerCount]
+      : '#' + Math.random().toString(16).slice(-6),
+  tension: 0.1,
+});
+singerCount += 1;
 const singersOverTime: ChartData<'line', { x: Date; y: number }[]> = {
-  labels: Array.from(singers.keys()),
+  labels: ['Songs'],
   datasets: singersOverTimeData,
 };
 const singersOverTimeOptions: ChartOptions<'line'> = {

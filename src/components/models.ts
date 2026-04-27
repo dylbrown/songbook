@@ -9,19 +9,13 @@ export interface Meta {
 
 export type Song = {
   name: string;
-  alt: string[];
-  roud?: number;
-  singers: string[];
   date: Date;
-  composer?: string;
-  unaccompanied: boolean;
-  accompanied: boolean;
-  refrain: string;
+  source: string;
+  info: string;
+  chords: string;
   themes: string[];
-  categories: string[];
   purposes: string[];
-  happiness: number;
-  reference?: string;
-  lyrics?: string;
-  info?: string;
+  difficulty: number;
+  audio: string;
+  lyrics: string;
 };

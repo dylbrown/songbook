@@ -2,25 +2,15 @@ import type { Song } from 'src/components/models';
 import { capitalize } from 'vue';
 type Results = {
   songs: Song[];
-  singers: Map<string, number>;
-  categories: Map<string, number>;
   themes: Map<string, number>;
   purposes: Map<string, number>;
 };
 let songs_promise: Promise<Results> | null = null;
 
-// https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
-/* function shuffleArray<T>(array: T[]): void {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-} */
-
 export async function getSongs(): Promise<Results> {
   if (songs_promise != null) return songs_promise;
   songs_promise = fetch(
-    'https://docs.google.com/spreadsheets/d/19_AunvMQBWfs3G91r23vIwdEyqy4g9r2p5I7zGPfWvc/gviz/tq?tqx=out:json&sheet=Responses',
+    'https://docs.google.com/spreadsheets/d/1Zq-F5FfIdzCwzoXfOKWQN4WBxKdZG54382W44mrySSA/gviz/tq?tqx=out:json&sheet=Responses',
   )
     .then((res) => {
       if (!res.ok) {
@@ -36,42 +26,22 @@ export async function getSongs(): Promise<Results> {
       for (const row_obj of songs_sheet.table.rows) {
         const row = row_obj.c;
         const song: Song = {
-          name: get(row, 0),
-          alt: makeList(get(row, 2)),
-          roud: Number(get(row, 3)),
-          singers: makeList(get(row, 13)),
-          date: parseDate(get(row, 1).trim()),
-          composer: get(row, 4),
-          unaccompanied:
-            row[5] == null || get(row, 5).includes('Unaccompanied'),
-          accompanied: row[5] == null || get(row, 5).includes('Accompanied'),
-          refrain: get(row, 6),
-          themes: sanitize(makeList(get(row, 7), '[,;]')),
-          categories: sanitize(makeList(get(row, 8), '[,;]')),
-          purposes: sanitize(makeList(get(row, 16), '[,;]')),
-          happiness: Number(get(row, 9)),
-          reference: get(row, 10),
-          lyrics: get(row, 11),
-          info: get(row, 15),
+          name: get(row, 1),
+          date: parseDate(get(row, 0).trim()),
+          source: get(row, 2),
+          info: get(row, 3),
+          chords: get(row, 4),
+          themes: sanitize(makeList(get(row, 5), ',')),
+          purposes: sanitize(makeList(get(row, 6), ',')),
+          difficulty: Number(get(row, 7)),
+          audio: get(row, 8),
+          lyrics: get(row, 9),
         };
-        if (song.date.getTime() == 0) {
-          console.log(song);
-        }
         songs.push(song);
       }
-      const singers: Map<string, number> = new Map();
-      const categories: Map<string, number> = new Map();
       const themes: Map<string, number> = new Map();
       const purposes: Map<string, number> = new Map();
       for (const song of songs) {
-        for (const singer of song.singers) {
-          const count = singers.get(singer);
-          singers.set(singer, 1 + (count ?? 0));
-        }
-        for (const cat of song.categories) {
-          const count = categories.get(cat);
-          categories.set(cat, 1 + (count ?? 0));
-        }
         for (const theme of song.themes) {
           const count = themes.get(theme);
           themes.set(theme, 1 + (count ?? 0));
@@ -81,7 +51,7 @@ export async function getSongs(): Promise<Results> {
           purposes.set(purpose, 1 + (count ?? 0));
         }
       }
-      return { songs, singers, categories, themes, purposes };
+      return { songs, themes, purposes };
     });
   return songs_promise;
 }

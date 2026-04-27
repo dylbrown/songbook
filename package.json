@@ -2,8 +2,8 @@
   "name": "songbook",
   "version": "0.0.1",
   "description": "A Songs index",
-  "productName": "The Folkbook",
-  "author": "Dylan Brown <dylanmb193@gmail.com>",
+  "productName": "Circles of Song",
+  "author": "Dylan Brown <music@dylanbrown.ca>",
   "private": true,
   "scripts": {
     "lint": "eslint -c ./eslint.config.js \"./src*/**/*.{ts,js,cjs,mjs,vue}\"",
